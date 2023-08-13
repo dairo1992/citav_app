@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Importa el paquete intl
 
-import 'drawer.dart';
+import '../widgets/drawer.dart';
 
 class MyInspectionsPage extends StatelessWidget {
   @override

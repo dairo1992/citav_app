@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'drawer.dart';
+import '../widgets/drawer.dart';
 
 class HomePage extends StatelessWidget {
   @override
