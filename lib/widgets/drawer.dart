@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../pages/login.dart';
+import '../widgets/appTheme.dart';
 
 class DrawerPage extends StatelessWidget {
   @override
@@ -10,17 +11,20 @@ class DrawerPage extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(color: Colors.blue),
+            decoration: BoxDecoration(
+              color: AppTheme
+                  .asentColor1, // Utiliza el color primario definido en el ThemeData
+            ),
             child: Center(
-              child: Text(
-                'Mi App',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+              child: Image(
+                image: AssetImage('assets/logo.png'),
               ),
             ),
           ),
           ListTile(
             leading: Icon(Icons.home),
-            title: Text('Inicio'),
+            title: Text('Inicio',
+                          style: AppTheme.lightTheme.textTheme.bodyLarge),
             onTap: () {
               Navigator.of(context).pop(); // Cerrar el Drawer
               Navigator.pushNamed(context, '/home');
@@ -44,7 +48,7 @@ class DrawerPage extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.list),
-            title: Text('Inspecciones Realizadas'),
+            title: Text('Inspec. Realizadas'),
             onTap: () {
               Navigator.of(context).pop(); // Cerrar el Drawer
               Navigator.pushNamed(context, '/my_inspections');
@@ -66,6 +70,8 @@ class DrawerPage extends StatelessWidget {
               Navigator.pushNamed(context, '/help');
             },
           ),
+
+          SizedBox(height: 50),
           Divider(), // Línea divisora
           ListTile(
             leading: Icon(Icons.logout),

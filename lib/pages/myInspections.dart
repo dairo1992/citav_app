@@ -3,7 +3,30 @@ import 'package:intl/intl.dart'; // Importa el paquete intl
 
 import '../widgets/drawer.dart';
 
+class Inspeccion {
+  final String placa;
+  final String hora;
+  final String tipo;
+  final bool estado;
+
+  Inspeccion({
+    required this.placa,
+    required this.hora,
+    required this.tipo,
+    required this.estado,
+  });
+}
+
 class MyInspectionsPage extends StatelessWidget {
+
+  final List<Inspeccion> inspecciones = [
+    Inspeccion(placa: 'ABC123', hora: '10:00 AM', tipo: 'Auto', estado: true),
+    Inspeccion(placa: 'XYZ789', hora: '02:30 PM', tipo: 'Camión', estado: false),
+    Inspeccion(placa: 'MHY778', hora: '07:30 AM', tipo: 'Auto', estado: true),
+    // Agrega más inspecciones aquí
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,9 +39,35 @@ class MyInspectionsPage extends StatelessWidget {
       ),
       drawer: DrawerPage(),
       body: Center(
-        child: Text(
-          '¡Hola desde la página mis inspecciones!',
-          style: TextStyle(fontSize: 24), // Aumenta el tamaño de la fuente
+        child: ListView.builder(
+        itemCount: inspecciones.length,
+        itemBuilder: (context, index) {
+          return _buildInspeccionCard(inspecciones[index]);
+        },
+      ),
+      ),
+    );
+  }
+
+  Widget _buildInspeccionCard(Inspeccion inspeccion) {
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: ListTile(
+        title: Text('${inspeccion.placa}'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Tipo: ${inspeccion.tipo}'),
+            Text('${inspeccion.hora}'),
+          ],
+        ),
+        trailing: CircleAvatar(
+          backgroundColor: inspeccion.estado ? Colors.green : Colors.red,
+          child: Icon(
+            inspeccion.estado ? Icons.check : Icons.close,
+            color: Colors.white,
+          ),
         ),
       ),
     );

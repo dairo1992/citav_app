@@ -1,26 +1,96 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login(BuildContext context) {
-    // Verificar el usuario y la contraseña (valores de prueba)
-    if (_userController.text == 'afem' && _passwordController.text == '123') {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => HomePage()),
+  Future<void> _login(BuildContext context) async {
+    final String apiUrl = 'https://ibingcode.com/public/login';
+
+    final Map<String, dynamic> data = {
+      'username': _userController.text,
+      'password': _passwordController.text,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
       );
-    } else {
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+        if (jsonResponse['status'] == true) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(
+                'Error de inicio de sesión',
+                style: TextStyle(fontSize: 24),
+              ),
+              content: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Text(
+                  'Usuario o contraseña incorrectos.',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(
+                    'Aceptar',
+                    style: TextStyle(fontSize: 25),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      } else {
+        // Mostrar diálogo de error de conexión con la API
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error de conexión'),
+            content: Text('No se pudo conectar con el servidor.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  'Aceptar',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // Error de conexión con la API
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Error de inicio de sesión'),
-          content: Text('Usuario o contraseña incorrectos.'),
+          title: Text('Error de conexión'),
+          content: Text('No se pudo conectar con el servidor.'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Aceptar'),
+              child: Text(
+                'Aceptar',
+                style: TextStyle(fontSize: 25),
+              ),
             ),
           ],
         ),
@@ -31,13 +101,11 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: Text('Login')),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image:
-                AssetImage('assets/login_bg.png'), // Ruta de la imagen de fondo
-            fit: BoxFit.cover, // Ajusta la imagen para que cubra el fondo
+            image: AssetImage('assets/login_bg.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: Center(
@@ -46,17 +114,16 @@ class LoginPage extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 40, vertical: 100),
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Color.fromRGBO(182, 179, 179,
-                    0.5), // Color de fondo gris para el contenedor interno
-                borderRadius: BorderRadius.circular(20), // Bordes redondeados
+                color: Color.fromRGBO(182, 179, 179, 0.5),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Image.asset(
-                    'assets/logo.png', // Ruta de la imagen
-                    width: 250, // Ajusta el ancho de la imagen
+                    'assets/logo.png',
+                    width: 250,
                     height: 250,
                   ),
                   TextFormField(
@@ -64,12 +131,14 @@ class LoginPage extends StatelessWidget {
                     decoration: InputDecoration(
                         labelText: 'Usuario',
                         labelStyle: TextStyle(fontSize: 25),
-                        hintStyle: TextStyle(fontSize: 50)),
-
+                        hintStyle: TextStyle(fontSize: 50),
+                        
+                    ),
+                        
                     style: TextStyle(
-                        fontSize: 40), // Ajusta el tamaño del texto ingresado
+                      fontSize: 40,
+                    ),
                   ),
-
                   SizedBox(height: 20),
                   TextFormField(
                     controller: _passwordController,
@@ -84,19 +153,19 @@ class LoginPage extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 90, vertical: 0),
                     padding: EdgeInsets.all(20),
-                    width: 15, // Ajusta el ancho del botón
+                    width: 15,
                     child: ElevatedButton(
                       onPressed: () => _login(context),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 20), // Ajusta el padding vertical
+                        padding: EdgeInsets.symmetric(vertical: 20),
                         textStyle: TextStyle(
-                            fontSize: 35), // Ajusta el tamaño del texto
+                          fontSize: 35,
+                        ),
                       ),
                       child: Text('Iniciar sesión'),
                     ),
                   ),
-                  SizedBox(height: 20), // Espacio entre el botón y la imagen
+                  SizedBox(height: 20),
                 ],
               ),
             ),

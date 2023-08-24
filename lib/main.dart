@@ -5,6 +5,7 @@ import 'pages/inspection.dart';
 import 'pages/login.dart';
 import 'pages/myInspections.dart';
 import 'pages/profile.dart';
+import 'widgets/appTheme.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
+      theme: AppTheme.lightTheme,
       home: LoginPage(), // Inicia en la página de Login
       onGenerateRoute: (settings) {
         // Define el manejo de las rutas en el Drawer

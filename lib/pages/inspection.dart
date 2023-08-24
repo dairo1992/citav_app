@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'newInspection.dart';
+import '../widgets/appTheme.dart';
+
+  final FocusNode _textFieldFocusNode = FocusNode();
 
 class InspectionPage extends StatelessWidget {
   @override
@@ -7,25 +11,25 @@ class InspectionPage extends StatelessWidget {
     return MaterialApp(
       title: 'My App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
       ),
-      home: MyHomePage(),
-   routes: {
-  '/newInspection': (context) => NewInspection(plateValue: ModalRoute.of(context)!.settings.arguments as String),
-},
-
+      home: NewInspectionPage(),
+      routes: {
+        '/newInspection': (context) => NewInspection(
+            plateValue: ModalRoute.of(context)!.settings.arguments as String),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class NewInspectionPage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _NewInspectionPageState createState() => _NewInspectionPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _NewInspectionPageState extends State<NewInspectionPage> {
   TextEditingController _plateController = TextEditingController();
-  
+
   void _navigateToNewInspection() {
     Navigator.pushNamed(
       context,
@@ -40,33 +44,65 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  
+  final FocusNode _textFieldFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/fondo6.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Image.asset(
+              'assets/placa.png',
+              width: 350,
+              height: 350,
+            ),
             Padding(
               padding: EdgeInsets.all(16.0),
-              child: TextField(
-                controller: _plateController,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  hintText: 'PLACA del vehiculo',
+              child: Center(
+                child: Container(
+                  width: 450,
+                  child: TextField(
+                    controller: _plateController,
+                    textAlign: TextAlign.center,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(6), // Limita a 6 caracteres
+                      UpperCaseTextFormatter(), // Convierte a mayúsculas
+                    ],
+                    focusNode: primaryFocus,
+                    decoration: InputDecoration(
+                      hintText: 'INGRESE LA PLACA DEL VEHICULO',
+                    ),
+                    style: AppTheme().bodyLargeStyle,
+                  ),
                 ),
               ),
             ),
             ElevatedButton(
+              style: AppTheme().buttonLightStyle,
               onPressed: _navigateToNewInspection,
-              child: Text('Inspeccionar'),
+              child: Text('Inspeccionar', style: AppTheme().textButton1),
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+        text: newValue.text.toUpperCase(), selection: newValue.selection);
   }
 }
