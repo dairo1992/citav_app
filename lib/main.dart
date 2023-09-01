@@ -9,15 +9,17 @@ import 'widgets/appTheme.dart';
 
 void main() => runApp(MyApp());
 
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp( 
       theme: AppTheme.lightTheme,
-      home: LoginPage(), // Inicia en la página de Login
+      initialRoute: '/login',  // Definimos la ruta inicial
       onGenerateRoute: (settings) {
-        // Define el manejo de las rutas en el Drawer
         switch (settings.name) {
+          case '/login':
+            return MaterialPageRoute(builder: (context) => LoginPage());
           case '/home':
             return MaterialPageRoute(builder: (context) => HomePage());
           case '/inspection':
@@ -35,3 +37,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+

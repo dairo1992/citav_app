@@ -3,49 +3,42 @@ import 'package:flutter/services.dart';
 import 'newInspection.dart';
 import '../widgets/appTheme.dart';
 
-  final FocusNode _textFieldFocusNode = FocusNode();
-
-class InspectionPage extends StatelessWidget {
+class InspectionPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My App',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
-      home: NewInspectionPage(),
-      routes: {
-        '/newInspection': (context) => NewInspection(
-            plateValue: ModalRoute.of(context)!.settings.arguments as String),
-      },
-    );
-  }
+  _InspectionPageState createState() => _InspectionPageState();
 }
 
-class NewInspectionPage extends StatefulWidget {
-  @override
-  _NewInspectionPageState createState() => _NewInspectionPageState();
-}
-
-class _NewInspectionPageState extends State<NewInspectionPage> {
+class _InspectionPageState extends State<InspectionPage> {
   TextEditingController _plateController = TextEditingController();
+  bool _isPlateEmpty = true;
 
-  void _navigateToNewInspection() {
-    Navigator.pushNamed(
-      context,
-      '/newInspection',
-      arguments: _plateController.text,
-    );
+void _navigateToNewInspection() {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => NewInspection(plateValue: _plateController.text),
+    ),
+  );
+}
+
+  @override
+  void initState() {
+    super.initState();
+    _plateController.addListener(_updatePlateEmptyStatus);
+  }
+
+  void _updatePlateEmptyStatus() {
+    setState(() {
+      _isPlateEmpty = _plateController.text.trim().isEmpty;
+    });
   }
 
   @override
   void dispose() {
+    _plateController.removeListener(_updatePlateEmptyStatus);
     _plateController.dispose();
     super.dispose();
   }
-
-  
-  final FocusNode _textFieldFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +53,6 @@ class _NewInspectionPageState extends State<NewInspectionPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              'assets/placa.png',
-              width: 350,
-              height: 350,
-            ),
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Center(
@@ -88,7 +76,7 @@ class _NewInspectionPageState extends State<NewInspectionPage> {
             ),
             ElevatedButton(
               style: AppTheme().buttonLightStyle,
-              onPressed: _navigateToNewInspection,
+              onPressed: _isPlateEmpty ? null : _navigateToNewInspection,
               child: Text('Inspeccionar', style: AppTheme().textButton1),
             ),
           ],
