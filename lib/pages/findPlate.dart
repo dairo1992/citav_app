@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'newInspection.dart';
 import '../widgets/appTheme.dart';
 
-class InspectionPage extends StatefulWidget {
+class FindPlatePage extends StatefulWidget {
   @override
-  _InspectionPageState createState() => _InspectionPageState();
+  _FindPlatePageState createState() => _FindPlatePageState();
 }
 
-class _InspectionPageState extends State<InspectionPage> {
+class _FindPlatePageState extends State<FindPlatePage> {
   TextEditingController _plateController = TextEditingController();
   bool _isPlateEmpty = true;
 

@@ -10,6 +10,7 @@ class NewInspection extends StatelessWidget {
   Widget build(BuildContext context) {
     String firstPart = plateValue.substring(0, 3);
     String secondPart = plateValue.substring(3, 6);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('New Inspection'),
@@ -23,99 +24,87 @@ class NewInspection extends StatelessWidget {
         ),
         child: Center(
           child: Container(
-            width: MediaQuery.of(context).size.width *
-                0.9, // Ancho un poco más pequeño que la pantalla
+            width: MediaQuery.of(context).size.width * 0.9,
             decoration: BoxDecoration(
-              color: Colors.grey
-                  .withOpacity(0.4), // Color de fondo gris translúcido
-              borderRadius: BorderRadius.circular(10), // Bordes redondeados
+              color: Colors.grey.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: SingleChildScrollView(
-              // Agregar un SingleChildScrollView
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/placa.png',
-                          width: 350,
-                          height: 350,
-                        ),
-                        Positioned(
-                          left:
-                              25, // Ajusta la posición horizontal del primer TextField
-                          child: Container(
-                            width: 150, // Ajusta el ancho del TextField
-                            child: Text(
-                              firstPart,
-                              style: TextStyle(fontSize: 68, fontWeight: FontWeight.bold),
-                            ),
+                    // Contenedor para datos fijos
+                    Container(
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/placa.png',
+                                width: 350,
+                                height: 350,
+                              ),
+                              Positioned(
+                                left: 25,
+                                child: Container(
+                                  width: 150,
+                                  child: Text(
+                                    firstPart,
+                                    style: TextStyle(
+                                        fontSize: 68, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 2,
+                                child: Container(
+                                  width: 150,
+                                  child: Text(
+                                    secondPart,
+                                    style: TextStyle(
+                                        fontSize: 68, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Positioned(
-                          right:
-                              2, // Ajusta la posición horizontal del segundo TextField
-                          child: Container(
-                            width: 150, // Ajusta el ancho del TextField
-                            child: Text(
-                              secondPart,
-                               style: TextStyle(fontSize: 68, fontWeight: FontWeight.bold),
-                            ),
-                            ),
-                          )
-                        
-                      ],
-                    ),
-
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Tipo vehiculo abandonado',
+                          
+                          Text('Tipo de servicio: Particular'),
+                          Text('Marca: Chevrolet'),
+                          Text('Modelo: Swift'),
+                          Text('Ubicación física: Coordenadas de ejemplo'),
+                        ],
                       ),
                     ),
 
-                    SizedBox(height: 8), // Espacio entre campos
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Tipo de servicio',
+                    SizedBox(height: 16),
+
+                    // Contenedor para campos editables
+                    Container(
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      readOnly: true,
-                      controller: TextEditingController(text: 'Particular'),
-                    ),
-                    SizedBox(height: 8), // Espacio entre campos
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Marca',
-                      ),
-                      readOnly: true,
-                      controller: TextEditingController(text: 'Chevrolet'),
-                    ),
-                    SizedBox(height: 8), // Espacio entre campos
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Modelo',
-                      ),
-                      readOnly: true,
-                      controller: TextEditingController(text: 'Swift'),
-                    ),
-                                        SizedBox(height: 8), // Espacio entre campos
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
+                      child: Column(
+                        children: [
+                          TextField(
                             decoration: InputDecoration(
-                              labelText: 'Ubicacion fisica',
-                              suffixIcon: Icon(Icons.location_on),
+                              labelText: 'Tipo vehículo abandonado',
                             ),
-                            readOnly: true,
-                            controller: TextEditingController(
-                                text: 'Coordenadas de ejemplo'),
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 8),
+                          // Otros campos editables aquí
+                        ],
+                      ),
                     ),
                   ],
                 ),

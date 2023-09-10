@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'pages/help.dart';
 import 'pages/home.dart';
-import 'pages/inspection.dart';
+import 'pages/findPlate.dart';
 import 'pages/login.dart';
 import 'pages/myInspections.dart';
 import 'pages/profile.dart';
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           case '/home':
             return MaterialPageRoute(builder: (context) => HomePage());
           case '/inspection':
-            return MaterialPageRoute(builder: (context) => InspectionPage());
+            return MaterialPageRoute(builder: (context) => FindPlatePage());
           case '/my_inspections':
             return MaterialPageRoute(builder: (context) => MyInspectionsPage());
           case '/profile':
