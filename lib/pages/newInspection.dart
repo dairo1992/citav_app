@@ -1,7 +1,8 @@
+import 'package:citav_app/pages/home.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
-class NewInspection extends StatelessWidget {
+class NewInspection extends StatefulWidget {
   final String plateValue;
   final String modelo;
   final String numero_chasis;
@@ -27,9 +28,54 @@ class NewInspection extends StatelessWidget {
   });
 
   @override
+  _NewInspectionState createState() => _NewInspectionState();
+}
+
+class _NewInspectionState extends State<NewInspection> {
+  Location location = Location();
+
+  double? latitude;
+  double? longitude;
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
+
+  Future<void> _getLocation() async {
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    LocationData _locationData = await location.getLocation();
+    if (mounted) {
+      setState(() {
+        latitude = _locationData.latitude;
+        longitude = _locationData.longitude;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String firstPart = plateValue.substring(0, 3);
-    String secondPart = plateValue.substring(3, 6);
+    String firstPart = widget.plateValue.substring(0, 3);
+    String secondPart = widget.plateValue.substring(3, 6);
 
     TextStyle textStyle = TextStyle(fontSize: 25.0);
 
@@ -98,37 +144,43 @@ class NewInspection extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        _buildDataRow('Tipo de servicio', tipo_servicio),
-                        _buildDataRow('Marca', marca),
-                        _buildDataRow('Modelo', modelo),
-                        _buildDataRow('Número de Chasis', numero_chasis),
-                        _buildDataRow('Número de Motor', numero_motor),
-                        _buildDataRow('Tipo de Vehículo', tipo_vehiculo),
-                        _buildDataRow('Organismo de Tránsito', organismo_transito),
-                        _buildDataRow('ID de Propietario', id_propietario),
-                        _buildDataRow('Nombre de Propietario', nombre_propietario),
+                        _buildDataRow('Tipo de servicio', widget.tipo_servicio),
+                        _buildDataRow('Marca', widget.marca),
+                        _buildDataRow('Modelo', widget.modelo),
+                        _buildDataRow('Número de Chasis', widget.numero_chasis),
+                        _buildDataRow('Número de Motor', widget.numero_motor),
+                        _buildDataRow('Tipo de Vehículo', widget.tipo_vehiculo),
+                        _buildDataRow('Organismo de Tránsito', widget.organismo_transito),
+                        _buildDataRow('ID de Propietario', widget.id_propietario),
+                        _buildDataRow('Nombre de Propietario', widget.nombre_propietario),
                       ],
                     ),
                   ),
                   SizedBox(height: 16),
-                  // Contenedor para campos editables
+                  // Campos de latitud y longitud
+                  if (latitude != null && longitude != null)
+                    _buildDataRow('Latitud', latitude.toString()),
+                  if (latitude != null && longitude != null)
+                    _buildDataRow('Longitud', longitude.toString()),
+                  SizedBox(height: 16),
+                  // Botón para enviar inspección
                   Container(
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Column(
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            labelText: 'Tipo vehículo abandonado',
-                          ),
-                          style: textStyle,
-                        ),
-                        SizedBox(height: 8),
-                        // Otros campos editables aquí
-                      ],
+                    child: ElevatedButton(
+                      onPressed: () {
+                       Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+                        // Aquí puedes agregar la lógica para enviar la inspección
+                      },
+                      child: Text(
+                        'Enviar Inspección',
+                        style: TextStyle(fontSize: 35),
+                      ),
                     ),
                   ),
                 ],

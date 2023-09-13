@@ -130,6 +130,7 @@ class LoginPage extends StatelessWidget {
                     controller: _userController,
                     decoration: InputDecoration(
                         labelText: 'Usuario',
+                        
                         labelStyle: TextStyle(fontSize: 25),
                         hintStyle: TextStyle(fontSize: 50),
                         

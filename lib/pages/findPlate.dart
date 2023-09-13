@@ -168,9 +168,3 @@ class UpperCaseTextFormatter extends TextInputFormatter {
         text: newValue.text.toUpperCase(), selection: newValue.selection);
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    home: FindPlatePage(),
-  ));
-}

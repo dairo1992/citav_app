@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
 
   Widget _buildButtons(Orientation orientation, BuildContext context) {
     final buttonSpacingFactor = 0.06; // Factor de separación
-    final buttonSize = 300.0; // Tamaño de los botones
+    final buttonSize = 280.0; // Tamaño de los botones
 
     final screenWidth = MediaQuery.of(context).size.width;
 
