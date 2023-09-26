@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../entities/user.dart';
 import 'home.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,6 +30,14 @@ class LoginPage extends StatelessWidget {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
         if (jsonResponse['status'] == true) {
+
+          final userState = Provider.of<User>(context, listen: false);
+        userState.updateUser(
+          username: jsonResponse['usuario'],
+          name: jsonResponse['nombre'],
+          id: jsonResponse['cedula'].toString(),
+          token: jsonResponse['token'],
+        );
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => HomePage()),
           );

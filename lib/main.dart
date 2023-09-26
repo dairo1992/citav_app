@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'entities/user.dart';
 import 'pages/help.dart';
 import 'pages/home.dart';
 import 'pages/findPlate.dart';
@@ -13,7 +15,9 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( 
+   return ChangeNotifierProvider(
+      create: (context) => User(),  // Crea una instancia de UserState
+      child: MaterialApp( 
       theme: AppTheme.lightTheme,
       initialRoute: '/login',  // Definimos la ruta inicial
       onGenerateRoute: (settings) {
@@ -34,6 +38,7 @@ class MyApp extends StatelessWidget {
             return null;
         }
       },
+      ),
     );
   }
 }

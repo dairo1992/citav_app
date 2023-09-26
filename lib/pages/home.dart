@@ -15,53 +15,23 @@ class HomePage extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OrientationBuilder(
-                builder: (context, orientation) {
-                  return _buildButtons(orientation, context);
-                },
-              ),
-              // Resto del contenido de la pantalla
-            ],
-          ),
+          child: _buildButtons(context),
         ),
       ),
     );
   }
 
-  Widget _buildButtons(Orientation orientation, BuildContext context) {
-    final buttonSpacingFactor = 0.06; // Factor de separación
-    final buttonSize = 280.0; // Tamaño de los botones
-
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    return orientation == Orientation.portrait
-        ? Column(
-            children: [
-              _roundedButton('assets/imageButton3.png', buttonSize, '/inspection', context, "Nueva Inspeccion"),
-              SizedBox(height: screenWidth * buttonSpacingFactor),
-              _roundedButton('assets/imageButton3.png', buttonSize, '/my_inspections', context, "Inspecciones Realizadas"),
-             SizedBox(height: screenWidth * buttonSpacingFactor),
-              _roundedButton('assets/imageButton3.png', buttonSize, '/my_inspections', context, "Sincronizar"),
-            
-            ],
-          )
-        : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _roundedButton('assets/imageButton3.png', buttonSize, '/inspection', context, "Nueva Inspeccion"),
-              SizedBox(width: screenWidth * buttonSpacingFactor),
-              _roundedButton('assets/imageButton3.png', buttonSize, '/my_inspections', context, "Inspecciones Realizadas"),
-              SizedBox(width: screenWidth * buttonSpacingFactor),
-              _roundedButton('assets/imageButton3.png', buttonSize, '/my_inspections', context, "Sincronizar"),
-            
-            ],
-          );
+  Widget _buildButtons(BuildContext context) {
+    return ListView(
+      children: [
+        _roundedButton('assets/imageButton3.png', '/inspection', context, "Nueva Inspección"),
+        _roundedButton('assets/imageButton3.png', '/my_inspections', context, "Inspecciones Realizadas"),
+        _roundedButton('assets/imageButton3.png', '/my_inspections', context, "Sincronizar"),
+      ],
+    );
   }
 
-  Widget _roundedButton(String imageUrl, double size, String pageRoute, BuildContext context, String buttonText) {
+  Widget _roundedButton(String imageUrl, String pageRoute, BuildContext context, String buttonText) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, pageRoute);
@@ -71,12 +41,12 @@ class HomePage extends StatelessWidget {
           Navigator.pushNamed(context, pageRoute);
         },
         child: Container(
-          width: size,
-          height: size,
+          width: double.infinity,
+          height: 280, // Establece la altura deseada
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Image.asset(imageUrl, width: size * 1, height: size * 1),
+              Image.asset(imageUrl),
               Text(
                 buttonText,
                 style: TextStyle(
@@ -84,6 +54,7 @@ class HomePage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
+                softWrap: true,
                 textAlign: TextAlign.center,
               ),
             ],

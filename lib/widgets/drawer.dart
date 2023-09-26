@@ -1,30 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../entities/user.dart';
 import '../pages/login.dart';
 import '../widgets/appTheme.dart';
 
 class DrawerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    final user = Provider.of<User>(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: AppTheme
-                  .asentColor1, // Utiliza el color primario definido en el ThemeData
+              color: AppTheme.asentColor1,
             ),
-            child: Center(
-              child: Image(
-                image: AssetImage('assets/logo.png'),
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image(
+                  image: AssetImage('assets/logo.png'),
+                  width: 100,
+                  height: 100,
+                ),
+                SizedBox(
+                    height: 5), // Espacio entre la imagen y el texto adicional
+                Text(
+                  user.name.toString().toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
           ListTile(
             leading: Icon(Icons.home),
-            title: Text('Inicio',
-                          style: AppTheme.lightTheme.textTheme.bodyLarge),
+            title:
+                Text('Inicio', style: AppTheme.lightTheme.textTheme.bodyLarge),
             onTap: () {
               Navigator.of(context).pop(); // Cerrar el Drawer
               Navigator.pushNamed(context, '/home');
