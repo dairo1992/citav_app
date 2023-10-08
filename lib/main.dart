@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'entities/user.dart';
-import 'pages/help.dart';
 import 'pages/home.dart';
-import 'pages/findPlate.dart';
+import 'pages/find_plate.dart';
 import 'pages/login.dart';
 import 'pages/myInspections.dart';
-import 'pages/profile.dart';
 import 'widgets/appTheme.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
    return ChangeNotifierProvider(
@@ -29,11 +29,7 @@ class MyApp extends StatelessWidget {
           case '/inspection':
             return MaterialPageRoute(builder: (context) => FindPlatePage());
           case '/my_inspections':
-            return MaterialPageRoute(builder: (context) => MyInspectionsPage());
-          case '/profile':
-            return MaterialPageRoute(builder: (context) => ProfilePage());
-          case '/help':
-            return MaterialPageRoute(builder: (context) => HelpPage());
+            return MaterialPageRoute(builder: (context) => MyInspectionsPage());          
           default:
             return null;
         }

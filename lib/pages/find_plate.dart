@@ -1,3 +1,4 @@
+import 'package:citav_app/pages/atypical_inspection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'newInspection.dart';
@@ -30,8 +31,17 @@ class _FindPlatePageState extends State<FindPlatePage> {
           // Mostrar el mensaje cuando no se encuentren datos
           _showErrorMessage(
               'Vehículo no encontrado en la base de datos del RUNT.');
+               Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AtypicalInspection(
+                    plateValue: plate,
+                ),
+              ),
+            );
         } else {
           final List<dynamic> data = json.decode(response.body);
+
 
           if (data.isNotEmpty) {
             final Map<String, dynamic> vehicleData = data[0];
@@ -117,6 +127,10 @@ class _FindPlatePageState extends State<FindPlatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Inspecciones realizadas'),
+   
+      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -133,13 +147,13 @@ class _FindPlatePageState extends State<FindPlatePage> {
                 child: Container(
                   width: 450,
                   child: TextField(
-                    controller: _plateController,
+                     controller: _plateController,
                     textAlign: TextAlign.center,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(6),
                       UpperCaseTextFormatter(),
                     ],
-                    focusNode: primaryFocus,
+                    // focusNode: primaryFocus,
                     decoration: InputDecoration(
                       hintText: 'INGRESE LA PLACA DEL VEHÍCULO',
                     ),
@@ -151,6 +165,8 @@ class _FindPlatePageState extends State<FindPlatePage> {
             ElevatedButton(
               style: AppTheme().buttonLightStyle,
               onPressed: _isPlateEmpty ? null : _navigateToNewInspection,
+              //  onPressed: (){print('He presionado el boton');},
+             
               child: Text('Inspeccionar', style: TextStyle(fontSize: 25.0)),
             ),
           ],

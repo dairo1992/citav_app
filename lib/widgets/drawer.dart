@@ -73,14 +73,7 @@ class DrawerPage extends StatelessWidget {
               Navigator.pushNamed(context, '/my_inspections');
             },
           ),
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Perfil'),
-            onTap: () {
-              Navigator.of(context).pop(); // Cerrar el Drawer
-              Navigator.pushNamed(context, '/profile');
-            },
-          ),
+
           ListTile(
             leading: Icon(Icons.help),
             title: Text('Ayuda'),

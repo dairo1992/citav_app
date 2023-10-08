@@ -26,16 +26,16 @@ class HomePage extends StatelessWidget {
       children: [
         _roundedButton('assets/imageButton3.png', '/inspection', context, "Nueva Inspección"),
         _roundedButton('assets/imageButton3.png', '/my_inspections', context, "Inspecciones Realizadas"),
-        _roundedButton('assets/imageButton3.png', '/my_inspections', context, "Sincronizar"),
+        _roundedButton('assets/imageButton3.png', '/inspection', context, "Sincronizar"),
       ],
     );
   }
 
   Widget _roundedButton(String imageUrl, String pageRoute, BuildContext context, String buttonText) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, pageRoute);
-      },
+      // onTap: () {
+      //   Navigator.pushNamed(context, pageRoute);
+      // },
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(context, pageRoute);

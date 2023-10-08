@@ -1,42 +1,23 @@
-import 'package:citav_app/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-
 import '../entities/user.dart';
+import 'home.dart';
 
-class NewInspection extends StatefulWidget {
+class AtypicalInspection extends StatefulWidget {
   final String plateValue;
-  final String modelo;
-  final String numero_chasis;
-  final String numero_motor;
-  final String marca;
-  final String tipo_servicio;
-  final String tipo_vehiculo;
-  final String organismo_transito;
-  final String id_propietario;
-  final String nombre_propietario;
 
-  NewInspection({
+  AtypicalInspection({
     required this.plateValue,
-    required this.modelo,
-    required this.numero_chasis,
-    required this.numero_motor,
-    required this.marca,
-    required this.tipo_servicio,
-    required this.tipo_vehiculo,
-    required this.organismo_transito,
-    required this.id_propietario,
-    required this.nombre_propietario,
   });
 
   @override
-  _NewInspectionState createState() => _NewInspectionState();
+  _AtypicalInspectionState createState() => _AtypicalInspectionState();
 }
 
-class _NewInspectionState extends State<NewInspection> {
+class _AtypicalInspectionState extends State<AtypicalInspection> {
   Location location = Location();
   double? latitude;
   double? longitude;
@@ -45,6 +26,26 @@ class _NewInspectionState extends State<NewInspection> {
 
   List<File?> photos = List.generate(4, (_) => null); // Lista para almacenar las fotos
   List<FileInfo?> photosInfo = List.generate(4, (_) => null); // Información de las fotos
+
+  String selectedVehicleType = 'Automovil'; // Valor por defecto
+  String selectedCarBrand = 'Toyota'; // Valor por defecto
+
+  List<String> vehicleTypes = [
+    'Automovil',
+    'Camioneta',
+    'Bus',
+    'TractoCamion',
+    'Motocicleta',
+  ];
+
+  List<String> carBrands = [
+    'Toyota',
+    'Honda',
+    'Ford',
+    'Chevrolet',
+    'Nissan',
+    // Agrega aquí las demás marcas de carros
+  ];
 
   @override
   void initState() {
@@ -81,7 +82,6 @@ class _NewInspectionState extends State<NewInspection> {
     }
   }
 
-  // Método para tomar una foto
   Future<void> _takePhoto(int photoIndex) async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -89,7 +89,6 @@ class _NewInspectionState extends State<NewInspection> {
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
 
-      // Obtener información de la foto
       final int fileSizeInBytes = imageFile.lengthSync();
       final double fileSizeInKB = fileSizeInBytes / 1024.0;
       final String imageDimensions =
@@ -108,7 +107,6 @@ class _NewInspectionState extends State<NewInspection> {
     }
   }
 
-  // Método para mostrar una foto tomada
   Widget _buildPhoto(int photoIndex) {
     final photo = photos[photoIndex];
     final fileInfo = photosInfo[photoIndex];
@@ -164,7 +162,7 @@ class _NewInspectionState extends State<NewInspection> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Inspection', style: textStyle),
+        title: Text('Inspeccion sin registro previo', style: textStyle),
       ),
       body: Container(
         child: Center(
@@ -174,7 +172,6 @@ class _NewInspectionState extends State<NewInspection> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  // Imagen de la placa y texto
                   Stack(
                     alignment: Alignment.center,
                     children: [
@@ -212,22 +209,10 @@ class _NewInspectionState extends State<NewInspection> {
                     ],
                   ),
                   SizedBox(height: 16),
-                  // Contenedor para datos fijos
                   Container(
                     padding: EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        _buildDataRow('Tipo de servicio', widget.tipo_servicio),
-                        _buildDataRow('Marca', widget.marca),
-                        _buildDataRow('Modelo', widget.modelo),
-                        _buildDataRow('Número de Chasis', widget.numero_chasis),
-                        _buildDataRow('Número de Motor', widget.numero_motor),
-                        _buildDataRow('Tipo de Vehículo', widget.tipo_vehiculo),
-                        _buildDataRow('Organismo de Tránsito', widget.organismo_transito),
-                        _buildDataRow('ID de Propietario', widget.id_propietario),
-                        _buildDataRow('Nombre de Propietario', widget.nombre_propietario),
-
-                        // Latitud y Longitud
                         if (latitude != null && longitude != null)
                           _buildDataRow('Latitud', latitude.toString()),
                         if (latitude != null && longitude != null)
@@ -237,44 +222,48 @@ class _NewInspectionState extends State<NewInspection> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  // Botón para seleccionar fecha de ingreso
                   Container(
                     padding: EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            final DateTime? picked = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2101),
-                            );
-                            if (picked != null && picked != selectedDate) {
-                              setState(() {
-                                selectedDate = picked;
-                                fechaIngreso = "${picked.toLocal()}".split(' ')[0]; // Muestra solo la fecha
-                              });
-                            }
+                        // Agregar lista desplegable para el tipo de vehículo
+                        DropdownButton<String>(
+                          isExpanded: true,
+                          value: selectedVehicleType,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedVehicleType = newValue!;
+                            });
                           },
-                          child: Text(
-                            'Seleccionar Fecha de Ingreso',
-                            style: TextStyle(fontSize: 25),
-                          ),
+                          items: vehicleTypes.map((String type) {
+                            return DropdownMenuItem<String>(
+                              
+                              value: type,
+                              child: Text(type),
+                            );
+                          }).toList(),
                         ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Fecha de Ingreso: $fechaIngreso',
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
+
+                        // Agregar lista desplegable para la marca del automóvil
+                        DropdownButton<String>(
+                          isExpanded: true,
+                          value: selectedCarBrand,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedCarBrand = newValue!;
+                            });
+                          },
+                          items: carBrands.map((String brand) {
+                            return DropdownMenuItem<String>(
+                              value: brand,
+                              child: Text(brand),
+                            );
+                          }).toList(),
                         ),
                       ],
                     ),
                   ),
                   SizedBox(height: 16),
-                  // Botón para enviar inspección
                   Container(
                     padding: EdgeInsets.all(16.0),
                     child: ElevatedButton(
@@ -282,7 +271,6 @@ class _NewInspectionState extends State<NewInspection> {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) => HomePage()),
                         );
-                        // Aquí puedes agregar la lógica para enviar la inspección
                       },
                       child: Text(
                         'Enviar Inspección',
@@ -291,7 +279,6 @@ class _NewInspectionState extends State<NewInspection> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  // Espacios para tomar fotos
                   Column(
                     children: [
                       for (int i = 0; i < 4; i++)
