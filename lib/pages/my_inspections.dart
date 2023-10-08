@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ftpconnect/ftpconnect.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -18,16 +19,21 @@ class Inspeccion {
 }
 
 class MyInspectionsPage extends StatefulWidget {
+  const MyInspectionsPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _MyInspectionsPageState createState() => _MyInspectionsPageState();
 }
 
 class _MyInspectionsPageState extends State<MyInspectionsPage> {
+  final logger = Logger();
+
   final List<DateTime> previousDates = [
-    DateTime.now().subtract(Duration(days: 4)),
-    DateTime.now().subtract(Duration(days: 3)),
-    DateTime.now().subtract(Duration(days: 2)),
-    DateTime.now().subtract(Duration(days: 1)),
+    DateTime.now().subtract(const Duration(days: 4)),
+    DateTime.now().subtract(const Duration(days: 3)),
+    DateTime.now().subtract(const Duration(days: 2)),
+    DateTime.now().subtract(const Duration(days: 1)),
     DateTime.now(),
   ];
 
@@ -44,7 +50,7 @@ class _MyInspectionsPageState extends State<MyInspectionsPage> {
   }
 
   Future<void> _fetchInspections() async {
-    final apiUrl = 'https://ibingcode.com/public/listarInspecciones';
+    const apiUrl = 'https://ibingcode.com/public/listarInspecciones';
     final requestBody = jsonEncode({"fecha_inspeccion": selectedDate});
 
     try {
@@ -77,14 +83,17 @@ class _MyInspectionsPageState extends State<MyInspectionsPage> {
           jsonResponse = response.body; // Guarda el JSON de la respuesta
         });
       } else {
-        print('Failed to fetch inspections: ${response.statusCode}');
+        // print('Failed to fetch inspections: ${response.statusCode}');
+        logger.log('Failed to fetch inspections: ${response.statusCode}');
+
         setState(() {
           isLoading = false;
           jsonResponse = response.body; // Guarda el JSON de la respuesta en caso de error
         });
       }
     } catch (error) {
-      print('Error fetching inspections: $error');
+      // print('Error fetching inspections: $error');
+      logger.log('Error fetching inspections: $error');
       setState(() {
         isLoading = false;
       });
@@ -95,26 +104,26 @@ class _MyInspectionsPageState extends State<MyInspectionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inspecciones realizadas'),
+        title: const Text('Inspecciones realizadas'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(64.0),
+          preferredSize: const Size.fromHeight(64.0),
           child: MyTabBar(),
         ),
       ),
       body: Center(
         child: isLoading
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : inspecciones.isEmpty
                 ? Column(
                     children: [
-                      Text('No hay inspecciones en esta fecha.'),
-                      Text('JSON de la Solicitud:'),
+                      const Text('No hay inspecciones en esta fecha.'),
+                      const Text('JSON de la Solicitud:'),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Text(jsonRequest), // Muestra el JSON de la solicitud
                         ),
                       ),
-                      Text('JSON de la Respuesta:'),
+                      const Text('JSON de la Respuesta:'),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Text(jsonResponse), // Muestra el JSON de la respuesta
@@ -132,13 +141,13 @@ class _MyInspectionsPageState extends State<MyInspectionsPage> {
                           },
                         ),
                       ),
-                      Text('JSON de la Solicitud:'),
+                      const Text('JSON de la Solicitud:'),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Text(jsonRequest), // Muestra el JSON de la solicitud
                         ),
                       ),
-                      Text('JSON de la Respuesta:'),
+                      const Text('JSON de la Respuesta:'),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Text(jsonResponse), // Muestra el JSON de la respuesta
@@ -153,14 +162,14 @@ class _MyInspectionsPageState extends State<MyInspectionsPage> {
   Widget _buildInspeccionCard(Inspeccion inspeccion) {
     return Card(
       elevation: 4,
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
-        title: Text('${inspeccion.placa}'),
+        title: Text(inspeccion.placa),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Tipo: ${inspeccion.tipo}'),
-            Text('${inspeccion.hora}'),
+            Text(inspeccion.hora),
           ],
         ),
         trailing: CircleAvatar(
@@ -175,12 +184,13 @@ class _MyInspectionsPageState extends State<MyInspectionsPage> {
   }
 }
 
+// ignore: use_key_in_widget_constructors
 class MyTabBar extends StatelessWidget {
   final List<DateTime> previousDates = [
-    DateTime.now().subtract(Duration(days: 4)),
-    DateTime.now().subtract(Duration(days: 3)),
-    DateTime.now().subtract(Duration(days: 2)),
-    DateTime.now().subtract(Duration(days: 1)),
+    DateTime.now().subtract(const Duration(days: 4)),
+    DateTime.now().subtract(const Duration(days: 3)),
+    DateTime.now().subtract(const Duration(days: 2)),
+    DateTime.now().subtract(const Duration(days: 1)),
     DateTime.now(),
   ];
 
@@ -194,7 +204,7 @@ class MyTabBar extends StatelessWidget {
         indicator: ShapeDecoration(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
-            side: BorderSide(
+            side: const BorderSide(
               color: Colors.green,
               width: 2.0,
             ),
@@ -206,7 +216,7 @@ class MyTabBar extends StatelessWidget {
               text: _formatDate(date),
             ),
         ],
-        labelStyle: TextStyle(fontSize: 30),
+        labelStyle: const TextStyle(fontSize: 30),
       ),
     );
   }

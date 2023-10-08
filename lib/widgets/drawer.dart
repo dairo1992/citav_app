@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../entities/user.dart';
 import '../pages/login.dart';
-import '../widgets/appTheme.dart';
+import 'app_theme.dart';
 
 class DrawerPage extends StatelessWidget {
+  const DrawerPage({super.key});
+
   @override
   Widget build(BuildContext context) {
 
@@ -15,23 +17,23 @@ class DrawerPage extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppTheme.asentColor1,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image(
+                const Image(
                   image: AssetImage('assets/logo.png'),
                   width: 100,
                   height: 100,
                 ),
-                SizedBox(
+                const SizedBox(
                     height: 5), // Espacio entre la imagen y el texto adicional
                 Text(
                   user.name.toString().toUpperCase(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -41,7 +43,7 @@ class DrawerPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.home),
+            leading: const Icon(Icons.home),
             title:
                 Text('Inicio', style: AppTheme.lightTheme.textTheme.bodyLarge),
             onTap: () {
@@ -50,44 +52,37 @@ class DrawerPage extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.sync),
-            title: Text('Sincronizar'),
+            leading: const Icon(Icons.sync),
+            title: const Text('Sincronizar'),
             onTap: () {
               // Lógica para sincronizar
               Navigator.of(context).pop(); // Cerrar el Drawer
             },
           ),
           ListTile(
-            leading: Icon(Icons.add),
-            title: Text('Nueva Inspección'),
+            leading: const Icon(Icons.add),
+            title: const Text('Nueva Inspección'),
             onTap: () {
               Navigator.of(context).pop(); // Cerrar el Drawer
               Navigator.pushNamed(context, '/inspection');
             },
           ),
           ListTile(
-            leading: Icon(Icons.list),
-            title: Text('Inspec. Realizadas'),
+            leading: const Icon(Icons.list),
+            title: const Text('Inspec. Realizadas'),
             onTap: () {
               Navigator.of(context).pop(); // Cerrar el Drawer
               Navigator.pushNamed(context, '/my_inspections');
             },
           ),
 
-          ListTile(
-            leading: Icon(Icons.help),
-            title: Text('Ayuda'),
-            onTap: () {
-              Navigator.of(context).pop(); // Cerrar el Drawer
-              Navigator.pushNamed(context, '/help');
-            },
-          ),
+          
 
-          SizedBox(height: 50),
-          Divider(), // Línea divisora
+          const SizedBox(height: 50),
+          const Divider(), // Línea divisora
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Cerrar Sesión'),
+            leading: const Icon(Icons.logout),
+            title: const Text('Cerrar Sesión'),
             onTap: () {
               // Lógica para cerrar sesión
               Navigator.of(context).pop(); // Cerrar el Drawer

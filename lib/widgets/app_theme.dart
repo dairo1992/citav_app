@@ -4,6 +4,11 @@ class AppTheme {
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
+     appBarTheme: const AppBarTheme(
+       backgroundColor: Color(0xFF111D26), // Color de la AppBar
+        
+    ),
+    
     textTheme: const TextTheme(
       bodyLarge: TextStyle(fontSize: 25.0, color: primaryTextColor),
       bodyMedium: TextStyle(fontSize: 14.0),
@@ -25,14 +30,14 @@ class AppTheme {
   static const Color lightColor2 = Color.fromRGBO(236, 232, 232, 1);
   // ... otros colores y estilos
 
-  final TextStyle bodyLargeStyle = TextStyle(fontSize: 25.0, color: primaryTextColor);
-  final TextStyle bodyMediumStyle = TextStyle(fontSize: 14.0);
+  final TextStyle bodyLargeStyle = const TextStyle(fontSize: 25.0, color: primaryTextColor);
+  final TextStyle bodyMediumStyle = const TextStyle(fontSize: 14.0);
 
-  final TextStyle textButton1 = TextStyle(fontSize: 30.0, color: const Color.fromARGB(255, 255, 255, 255));
+  final TextStyle textButton1 = const TextStyle(fontSize: 30.0, color: Color.fromARGB(255, 255, 255, 255));
  final ButtonStyle buttonLightStyle = ElevatedButton.styleFrom(
-    backgroundColor:  Color.fromRGBO(244,157,76,1), // Color de fondo del botón
+    backgroundColor:  const Color.fromRGBO(244,157,76,1), // Color de fondo del botón
     // Estilo de texto
-    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Padding interno
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Padding interno
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8.0), // Borde redondeado
     ),

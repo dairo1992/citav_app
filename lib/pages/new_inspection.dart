@@ -1,26 +1,45 @@
-// ignore_for_file: use_key_in_widget_constructors, no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:citav_app/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+
 import '../entities/user.dart';
-import 'home.dart';
 
-class AtypicalInspection extends StatefulWidget {
+class NewInspection extends StatefulWidget {
   final String plateValue;
+  final String modelo;
+  final String numeroChasis;
+  final String numeroMotor;
+  final String marca;
+  final String tipoServicio;
+  final String tipoVehiculo;
+  final String organismoTransito;
+  final String idPropietario;
+  final String nombrePropietario;
 
-  const AtypicalInspection({
+  const NewInspection({super.key, 
     required this.plateValue,
+    required this.modelo,
+    required this.numeroChasis,
+    required this.numeroMotor,
+    required this.marca,
+    required this.tipoServicio,
+    required this.tipoVehiculo,
+    required this.organismoTransito,
+    required this.idPropietario,
+    required this.nombrePropietario,
   });
 
   @override
   // ignore: library_private_types_in_public_api
-  _AtypicalInspectionState createState() => _AtypicalInspectionState();
+  _NewInspectionState createState() => _NewInspectionState();
 }
 
-class _AtypicalInspectionState extends State<AtypicalInspection> {
+class _NewInspectionState extends State<NewInspection> {
   Location location = Location();
   double? latitude;
   double? longitude;
@@ -30,33 +49,12 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
   List<File?> photos = List.generate(4, (_) => null); // Lista para almacenar las fotos
   List<FileInfo?> photosInfo = List.generate(4, (_) => null); // Información de las fotos
 
-  String selectedVehicleType = 'Automovil'; // Valor por defecto
-  String selectedCarBrand = 'Toyota'; // Valor por defecto
-
-  List<String> vehicleTypes = [
-    'Automovil',
-    'Camioneta',
-    'Bus',
-    'TractoCamion',
-    'Motocicleta',
-  ];
-
-  List<String> carBrands = [
-    'Toyota',
-    'Honda',
-    'Ford',
-    'Chevrolet',
-    'Nissan',
-    // Agrega aquí las demás marcas de carros
-  ];
-
   @override
   void initState() {
     super.initState();
     _getLocation();
   }
 
-  
   Future<void> _getLocation() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
@@ -86,14 +84,15 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
     }
   }
 
+  // Método para tomar una foto
   Future<void> _takePhoto(int photoIndex) async {
     final picker = ImagePicker();
-    // ignore: deprecated_member_use
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
 
+      // Obtener información de la foto
       final int fileSizeInBytes = imageFile.lengthSync();
       final double fileSizeInKB = fileSizeInBytes / 1024.0;
       final String imageDimensions =
@@ -112,6 +111,7 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
     }
   }
 
+  // Método para mostrar una foto tomada
   Widget _buildPhoto(int photoIndex) {
     final photo = photos[photoIndex];
     final fileInfo = photosInfo[photoIndex];
@@ -167,7 +167,7 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inspeccion sin registro previo', style: textStyle),
+        title: Text('New Inspection', style: textStyle),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -176,6 +176,7 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                // Imagen de la placa y texto
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -213,10 +214,22 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
                   ],
                 ),
                 const SizedBox(height: 16),
+                // Contenedor para datos fijos
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
+                      _buildDataRow('Tipo de servicio', widget.tipoServicio),
+                      _buildDataRow('Marca', widget.marca),
+                      _buildDataRow('Modelo', widget.modelo),
+                      _buildDataRow('Número de Chasis', widget.numeroChasis),
+                      _buildDataRow('Número de Motor', widget.numeroMotor),
+                      _buildDataRow('Tipo de Vehículo', widget.tipoVehiculo),
+                      _buildDataRow('Organismo de Tránsito', widget.organismoTransito),
+                      _buildDataRow('ID de Propietario', widget.idPropietario),
+                      _buildDataRow('Nombre de Propietario', widget.nombrePropietario),
+
+                      // Latitud y Longitud
                       if (latitude != null && longitude != null)
                         _buildDataRow('Latitud', latitude.toString()),
                       if (latitude != null && longitude != null)
@@ -226,48 +239,44 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                // Botón para seleccionar fecha de ingreso
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      // Agregar lista desplegable para el tipo de vehículo
-                      DropdownButton<String>(
-                        isExpanded: true,
-                        value: selectedVehicleType,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedVehicleType = newValue!;
-                          });
-                        },
-                        items: vehicleTypes.map((String type) {
-                          return DropdownMenuItem<String>(
-                            
-                            value: type,
-                            child: Text(type),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101),
                           );
-                        }).toList(),
+                          if (picked != null && picked != selectedDate) {
+                            setState(() {
+                              selectedDate = picked;
+                              fechaIngreso = "${picked.toLocal()}".split(' ')[0]; // Muestra solo la fecha
+                            });
+                          }
+                        },
+                        child: const Text(
+                          'Seleccionar Fecha de Ingreso',
+                          style: TextStyle(fontSize: 25),
+                        ),
                       ),
-
-                      // Agregar lista desplegable para la marca del automóvil
-                      DropdownButton<String>(
-                        isExpanded: true,
-                        value: selectedCarBrand,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedCarBrand = newValue!;
-                          });
-                        },
-                        items: carBrands.map((String brand) {
-                          return DropdownMenuItem<String>(
-                            value: brand,
-                            child: Text(brand),
-                          );
-                        }).toList(),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Fecha de Ingreso: $fechaIngreso',
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
+                // Botón para enviar inspección
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
@@ -275,6 +284,7 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) => const HomePage()),
                       );
+                      // Aquí puedes agregar la lógica para enviar la inspección
                     },
                     child: const Text(
                       'Enviar Inspección',
@@ -283,6 +293,7 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                // Espacios para tomar fotos
                 Column(
                   children: [
                     for (int i = 0; i < 4; i++)

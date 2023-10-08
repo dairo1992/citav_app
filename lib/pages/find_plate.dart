@@ -1,18 +1,21 @@
 import 'package:citav_app/pages/atypical_inspection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'newInspection.dart';
-import '../widgets/appTheme.dart';
+import 'new_inspection.dart';
+import '../widgets/app_theme.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class FindPlatePage extends StatefulWidget {
+  const FindPlatePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _FindPlatePageState createState() => _FindPlatePageState();
 }
 
 class _FindPlatePageState extends State<FindPlatePage> {
-  TextEditingController _plateController = TextEditingController();
+  final TextEditingController _plateController = TextEditingController();
   bool _isPlateEmpty = true;
 
   void _navigateToNewInspection() async {
@@ -31,6 +34,7 @@ class _FindPlatePageState extends State<FindPlatePage> {
           // Mostrar el mensaje cuando no se encuentren datos
           _showErrorMessage(
               'Vehículo no encontrado en la base de datos del RUNT.');
+               // ignore: use_build_context_synchronously
                Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -47,29 +51,30 @@ class _FindPlatePageState extends State<FindPlatePage> {
             final Map<String, dynamic> vehicleData = data[0];
 
             String modelo = vehicleData['v.modelo'];
-            String numero_chasis = vehicleData['numero_chasis'];
-            String numero_motor = vehicleData['numero_motor'];
+            String numeroChasis = vehicleData['numero_chasis'];
+            String numeroMotor = vehicleData['numero_motor'];
             String marca = vehicleData['marca'];
-            String tipo_servicio = vehicleData['tipo_servicio'];
-            String tipo_vehiculo = vehicleData['tipo_vehiculo'];
-            String organismo_transito = vehicleData['organismo_transito'];
-            String id_propietario = vehicleData['id_propietario'].toString();
-            String nombre_propietario = vehicleData['nombre_propietario'];
+            String tipoServicio = vehicleData['tipo_servicio'];
+            String tipoVehiculo = vehicleData['tipo_vehiculo'];
+            String organismoTransito = vehicleData['organismo_transito'];
+            String idPropietario = vehicleData['id_propietario'].toString();
+            String nombrePropietario = vehicleData['nombre_propietario'];
 
+            // ignore: use_build_context_synchronously
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => NewInspection(
                     plateValue: plate,
                     modelo: modelo,
-                    numero_chasis: numero_chasis,
-                    numero_motor: numero_motor,
+                    numeroChasis: numeroChasis,
+                    numeroMotor: numeroMotor,
                     marca: marca,
-                    tipo_servicio: tipo_servicio,
-                    tipo_vehiculo: tipo_vehiculo,
-                    organismo_transito: organismo_transito,
-                    id_propietario: id_propietario,
-                    nombre_propietario: nombre_propietario),
+                    tipoServicio: tipoServicio,
+                    tipoVehiculo: tipoVehiculo,
+                    organismoTransito: organismoTransito,
+                    idPropietario: idPropietario,
+                    nombrePropietario: nombrePropietario),
               ),
             );
           } else {
@@ -83,7 +88,7 @@ class _FindPlatePageState extends State<FindPlatePage> {
       }
     } catch (e) {
       _showErrorMessage(
-          'Error al comunicarse con el servidor. Verifique su conexión a internet.'+e.toString());
+          'Error al comunicarse con el servidor. Verifique su conexión a internet.$e');
     }
   }
 
@@ -91,11 +96,11 @@ class _FindPlatePageState extends State<FindPlatePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error', style: TextStyle(fontSize: 25.0)),
-        content: Text(message, style: TextStyle(fontSize: 25.0)),
+        title: const Text('Error', style: TextStyle(fontSize: 25.0)),
+        content: Text(message, style: const TextStyle(fontSize: 25.0)),
         actions: <Widget>[
           TextButton(
-            child: Text('Aceptar', style: TextStyle(fontSize: 25.0)),
+            child: const Text('Aceptar', style: TextStyle(fontSize: 25.0)),
             onPressed: () {
               Navigator.of(context).pop(); // Cierra la ventana emergente
             },
@@ -128,11 +133,11 @@ class _FindPlatePageState extends State<FindPlatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inspecciones realizadas'),
+        title: const Text('Inspecciones realizadas'),
    
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/fondo6.png'),
             fit: BoxFit.cover,
@@ -142,9 +147,9 @@ class _FindPlatePageState extends State<FindPlatePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Center(
-                child: Container(
+                child: SizedBox(
                   width: 450,
                   child: TextField(
                      controller: _plateController,
@@ -154,10 +159,10 @@ class _FindPlatePageState extends State<FindPlatePage> {
                       UpperCaseTextFormatter(),
                     ],
                     // focusNode: primaryFocus,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'INGRESE LA PLACA DEL VEHÍCULO',
                     ),
-                    style: TextStyle(fontSize: 25.0),
+                    style: const TextStyle(fontSize: 25.0),
                   ),
                 ),
               ),
@@ -167,7 +172,7 @@ class _FindPlatePageState extends State<FindPlatePage> {
               onPressed: _isPlateEmpty ? null : _navigateToNewInspection,
               //  onPressed: (){print('He presionado el boton');},
              
-              child: Text('Inspeccionar', style: TextStyle(fontSize: 25.0)),
+              child: const Text('Inspeccionar', style: TextStyle(fontSize: 25.0)),
             ),
           ],
         ),

@@ -9,8 +9,10 @@ class LoginPage extends StatelessWidget {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  LoginPage({super.key});
+
   Future<void> _login(BuildContext context) async {
-    final String apiUrl = 'https://ibingcode.com/public/login';
+    const String apiUrl = 'https://ibingcode.com/public/login';
 
     final Map<String, dynamic> data = {
       'username': _userController.text,
@@ -31,6 +33,7 @@ class LoginPage extends StatelessWidget {
 
         if (jsonResponse['status'] == true) {
 
+          // ignore: use_build_context_synchronously
           final userState = Provider.of<User>(context, listen: false);
         userState.updateUser(
           username: jsonResponse['usuario'],
@@ -38,20 +41,22 @@ class LoginPage extends StatelessWidget {
           id: jsonResponse['cedula'].toString(),
           token: jsonResponse['token'],
         );
+          // ignore: use_build_context_synchronously
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => const HomePage()),
           );
         } else {
+          // ignore: use_build_context_synchronously
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text(
+              title: const Text(
                 'Error de inicio de sesión',
                 style: TextStyle(fontSize: 24),
               ),
-              content: Container(
+              content: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
-                child: Text(
+                child: const Text(
                   'Usuario o contraseña incorrectos.',
                   style: TextStyle(fontSize: 25),
                 ),
@@ -59,7 +64,7 @@ class LoginPage extends StatelessWidget {
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
+                  child: const Text(
                     'Aceptar',
                     style: TextStyle(fontSize: 25),
                   ),
@@ -70,15 +75,16 @@ class LoginPage extends StatelessWidget {
         }
       } else {
         // Mostrar diálogo de error de conexión con la API
+        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Error de conexión'),
-            content: Text('No se pudo conectar con el servidor.'),
+            title: const Text('Error de conexión'),
+            content: const Text('No se pudo conectar con el servidor.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text(
+                child: const Text(
                   'Aceptar',
                   style: TextStyle(fontSize: 25),
                 ),
@@ -92,12 +98,12 @@ class LoginPage extends StatelessWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Error de conexión'),
-          content: Text('No se pudo conectar con el servidor.'),
+          title: const Text('Error de conexión'),
+          content: const Text('No se pudo conectar con el servidor.'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(
+              child: const Text(
                 'Aceptar',
                 style: TextStyle(fontSize: 25),
               ),
@@ -112,7 +118,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/login_bg.png'),
             fit: BoxFit.cover,
@@ -121,10 +127,10 @@ class LoginPage extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 100),
-              padding: EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 100),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Color.fromRGBO(182, 179, 179, 0.5),
+                color: const Color.fromRGBO(182, 179, 179, 0.5),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -138,7 +144,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   TextFormField(
                     controller: _userController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         labelText: 'Usuario',
                         
                         labelStyle: TextStyle(fontSize: 25),
@@ -146,37 +152,37 @@ class LoginPage extends StatelessWidget {
                         
                     ),
                         
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 40,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Contraseña',
                       labelStyle: TextStyle(fontSize: 25),
                     ),
-                    style: TextStyle(fontSize: 40),
+                    style: const TextStyle(fontSize: 40),
                   ),
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 90, vertical: 0),
-                    padding: EdgeInsets.all(20),
+                    margin: const EdgeInsets.symmetric(horizontal: 90, vertical: 0),
+                    padding: const EdgeInsets.all(20),
                     width: 15,
                     child: ElevatedButton(
                       onPressed: () => _login(context),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        textStyle: TextStyle(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        textStyle: const TextStyle(
                           fontSize: 35,
                         ),
                       ),
-                      child: Text('Iniciar sesión'),
+                      child: const Text('Iniciar sesión'),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
