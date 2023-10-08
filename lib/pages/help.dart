@@ -104,7 +104,7 @@ class _PhotoUploaderScreenState extends State<PhotoUploaderScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _takeAndUploadPhoto,
-        child: Icon(Icons.camera_alt),
+        child: const Icon(Icons.camera_alt),
       ),
     );
   }

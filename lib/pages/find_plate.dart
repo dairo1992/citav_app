@@ -34,18 +34,17 @@ class _FindPlatePageState extends State<FindPlatePage> {
           // Mostrar el mensaje cuando no se encuentren datos
           _showErrorMessage(
               'Vehículo no encontrado en la base de datos del RUNT.');
-               // ignore: use_build_context_synchronously
-               Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AtypicalInspection(
-                    plateValue: plate,
-                ),
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AtypicalInspection(
+                plateValue: plate,
               ),
-            );
+            ),
+          );
         } else {
           final List<dynamic> data = json.decode(response.body);
-
 
           if (data.isNotEmpty) {
             final Map<String, dynamic> vehicleData = data[0];
@@ -132,10 +131,7 @@ class _FindPlatePageState extends State<FindPlatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inspecciones realizadas'),
-   
-      ),
+  
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -152,7 +148,7 @@ class _FindPlatePageState extends State<FindPlatePage> {
                 child: SizedBox(
                   width: 450,
                   child: TextField(
-                     controller: _plateController,
+                    controller: _plateController,
                     textAlign: TextAlign.center,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(6),
@@ -171,8 +167,9 @@ class _FindPlatePageState extends State<FindPlatePage> {
               style: AppTheme().buttonLightStyle,
               onPressed: _isPlateEmpty ? null : _navigateToNewInspection,
               //  onPressed: (){print('He presionado el boton');},
-             
-              child: const Text('Inspeccionar', style: TextStyle(fontSize: 25.0)),
+
+              child:
+                  const Text('Inspeccionar', style: TextStyle(fontSize: 25.0)),
             ),
           ],
         ),

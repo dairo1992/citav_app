@@ -1,12 +1,15 @@
 // ignore_for_file: use_key_in_widget_constructors, no_leading_underscores_for_local_identifiers
 
+import 'dart:convert';
+
+import 'package:citav_app/pages/find_plate.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import '../entities/user.dart';
-import 'home.dart';
+import 'package:http/http.dart' as http;
 
 class AtypicalInspection extends StatefulWidget {
   final String plateValue;
@@ -25,10 +28,13 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
   double? latitude;
   double? longitude;
   DateTime? selectedDate; // Variable para almacenar la fecha seleccionada
-  String fechaIngreso = ""; // Variable para mostrar la fecha en el cuadro de diálogo
+  String fechaIngreso =
+      ""; // Variable para mostrar la fecha en el cuadro de diálogo
 
-  List<File?> photos = List.generate(4, (_) => null); // Lista para almacenar las fotos
-  List<FileInfo?> photosInfo = List.generate(4, (_) => null); // Información de las fotos
+  List<File?> photos =
+      List.generate(4, (_) => null); // Lista para almacenar las fotos
+  List<FileInfo?> photosInfo =
+      List.generate(4, (_) => null); // Información de las fotos
 
   String selectedVehicleType = 'Automovil'; // Valor por defecto
   String selectedCarBrand = 'Toyota'; // Valor por defecto
@@ -56,7 +62,6 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
     _getLocation();
   }
 
-  
   Future<void> _getLocation() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
@@ -157,6 +162,101 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
     );
   }
 
+  Future<void> _sendDataToAPI() async {
+    final user = Provider.of<User>(context, listen: false);
+    final DateTime currentDate = DateTime.now();
+    final String formattedDate =
+        "${currentDate.year}-${currentDate.month}-${currentDate.day}";
+
+    final Map<String, dynamic> data = {
+      "placa": widget.plateValue,
+      "fecha_inspeccion": formattedDate,
+      "fecha_ingreso": "",
+      "estado": "1",
+      "id_funcionario": user.id,
+      "id_proyecto": "1",
+      "latitud": latitude.toString(),
+      "longitud": longitude.toString(),
+      "marca": selectedCarBrand,
+      "tipo_vehiculo": selectedVehicleType,
+      "multimedia": "multimedia/inspecciones/${widget.plateValue}",
+    };
+
+    const String apiUrl = 'https://ibingcode.com/public/inserta_inspeccion';
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      final respuesta = jsonResponse.toString();
+
+      if (respuesta.contains("0")) {
+        // Éxito al enviar los datos y se guardaron correctamente
+        // Muestra un mensaje de éxito
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text(''),
+            content: const Text(
+              'Inspeccion registrada satisfactoriamente',
+              style: TextStyle(fontSize: 25),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      // ignore: prefer_const_constructors
+                      builder: (context) => FindPlatePage()),
+                ),
+                child: const Text(
+                  'Aceptar',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+            ],
+          ),
+        );
+      } else if (respuesta.contains("1")) {
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text(''),
+            content: const Text(
+              'La placa ingresada ya cuenta con una inspeccion',
+              style: TextStyle(fontSize: 25),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      // ignore: prefer_const_constructors
+                      builder: (context) => FindPlatePage()),
+                ),
+                child: const Text(
+                  'Aceptar',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      // Error al enviar los datos
+      // Puedes manejar el error de alguna manera aquí
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String firstPart = widget.plateValue.substring(0, 3);
@@ -167,7 +267,16 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inspeccion sin registro previo', style: textStyle),
+        title: Text(
+          'Inspeccion sin informacion del RUNT',
+          style: TextStyle(
+            color: Colors.white, // Establece el color del texto en blanco
+          ),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors
+              .white, // Establece el color del icono de retroceso en blanco
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -221,12 +330,13 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
                         _buildDataRow('Latitud', latitude.toString()),
                       if (latitude != null && longitude != null)
                         _buildDataRow('Longitud', longitude.toString()),
-                      _buildDataRow('Funcionario Inspector', user.name.toString()),
+                      _buildDataRow('Id inspector', user.id.toString()),
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                // const SizedBox(height: 16),
                 Container(
+                  constraints: BoxConstraints(maxWidth: 800),
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
@@ -241,7 +351,6 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
                         },
                         items: vehicleTypes.map((String type) {
                           return DropdownMenuItem<String>(
-                            
                             value: type,
                             child: Text(type),
                           );
@@ -272,9 +381,7 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const HomePage()),
-                      );
+                      _sendDataToAPI();
                     },
                     child: const Text(
                       'Enviar Inspección',
@@ -335,4 +442,21 @@ class FileInfo {
     required this.sizeInKB,
     required this.dimensions,
   });
+}
+
+class ApiResponse {
+  final int codigo;
+  final String datos;
+
+  ApiResponse({
+    required this.codigo,
+    required this.datos,
+  });
+
+  factory ApiResponse.fromJson(Map<String, dynamic> json) {
+    return ApiResponse(
+      codigo: json['CODIGO'] as int,
+      datos: json['DATOS'] as String,
+    );
+  }
 }

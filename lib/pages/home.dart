@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: const Text(''),
       iconTheme: const IconThemeData(color: Colors.white),
       leading: IconButton(
-        icon: Icon(Icons.menu), // Puedes usar el icono del Drawer o cualquier otro icono que desees
+        icon: const Icon(Icons.menu), // Puedes usar el icono del Drawer o cualquier otro icono que desees
         onPressed: () {
           const DrawerPage();// Aquí puedes abrir el Drawer o realizar cualquier otra acción que necesites
         },

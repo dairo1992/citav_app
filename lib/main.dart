@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
    return ChangeNotifierProvider(
       create: (context) => User(),  // Crea una instancia de UserState
       child: MaterialApp( 
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       initialRoute: '/login',  // Definimos la ruta inicial
       onGenerateRoute: (settings) {

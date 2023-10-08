@@ -21,7 +21,8 @@ class NewInspection extends StatefulWidget {
   final String idPropietario;
   final String nombrePropietario;
 
-  const NewInspection({super.key, 
+  const NewInspection({
+    super.key,
     required this.plateValue,
     required this.modelo,
     required this.numeroChasis,
@@ -44,10 +45,13 @@ class _NewInspectionState extends State<NewInspection> {
   double? latitude;
   double? longitude;
   DateTime? selectedDate; // Variable para almacenar la fecha seleccionada
-  String fechaIngreso = ""; // Variable para mostrar la fecha en el cuadro de diálogo
+  String fechaIngreso =
+      ""; // Variable para mostrar la fecha en el cuadro de diálogo
 
-  List<File?> photos = List.generate(4, (_) => null); // Lista para almacenar las fotos
-  List<FileInfo?> photosInfo = List.generate(4, (_) => null); // Información de las fotos
+  List<File?> photos =
+      List.generate(4, (_) => null); // Lista para almacenar las fotos
+  List<FileInfo?> photosInfo =
+      List.generate(4, (_) => null); // Información de las fotos
 
   @override
   void initState() {
@@ -167,7 +171,16 @@ class _NewInspectionState extends State<NewInspection> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Inspection', style: textStyle),
+        title: Text(
+          'Inspeccion con informacion proveniente del RUNT',
+          style: TextStyle(
+            color: Colors.white, // Establece el color del texto en blanco
+          ),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors
+              .white, // Establece el color del icono de retroceso en blanco
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -225,16 +238,19 @@ class _NewInspectionState extends State<NewInspection> {
                       _buildDataRow('Número de Chasis', widget.numeroChasis),
                       _buildDataRow('Número de Motor', widget.numeroMotor),
                       _buildDataRow('Tipo de Vehículo', widget.tipoVehiculo),
-                      _buildDataRow('Organismo de Tránsito', widget.organismoTransito),
+                      _buildDataRow(
+                          'Organismo de Tránsito', widget.organismoTransito),
                       _buildDataRow('ID de Propietario', widget.idPropietario),
-                      _buildDataRow('Nombre de Propietario', widget.nombrePropietario),
+                      _buildDataRow(
+                          'Nombre de Propietario', widget.nombrePropietario),
 
                       // Latitud y Longitud
                       if (latitude != null && longitude != null)
                         _buildDataRow('Latitud', latitude.toString()),
                       if (latitude != null && longitude != null)
                         _buildDataRow('Longitud', longitude.toString()),
-                      _buildDataRow('Funcionario Inspector', user.name.toString()),
+                      _buildDataRow(
+                          'Funcionario Inspector', user.name.toString()),
                     ],
                   ),
                 ),
@@ -255,7 +271,8 @@ class _NewInspectionState extends State<NewInspection> {
                           if (picked != null && picked != selectedDate) {
                             setState(() {
                               selectedDate = picked;
-                              fechaIngreso = "${picked.toLocal()}".split(' ')[0]; // Muestra solo la fecha
+                              fechaIngreso = "${picked.toLocal()}"
+                                  .split(' ')[0]; // Muestra solo la fecha
                             });
                           }
                         },
@@ -282,7 +299,8 @@ class _NewInspectionState extends State<NewInspection> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const HomePage()),
+                        MaterialPageRoute(
+                            builder: (context) => const HomePage()),
                       );
                       // Aquí puedes agregar la lógica para enviar la inspección
                     },
