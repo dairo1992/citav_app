@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors, no_leading_underscores_for_local_identifiers
-
 import 'dart:convert';
 
 import 'package:citav_app/pages/find_plate.dart';
@@ -14,7 +12,7 @@ import 'package:http/http.dart' as http;
 class AtypicalInspection extends StatefulWidget {
   final String plateValue;
 
-  const AtypicalInspection({
+  const AtypicalInspection({super.key, 
     required this.plateValue,
   });
 

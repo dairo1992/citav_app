@@ -1,5 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:citav_app/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -297,12 +299,53 @@ class _NewInspectionState extends State<NewInspection> {
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const HomePage()),
-                      );
+                    onPressed: () async {
+                      final DateTime currentDate = DateTime.now();
+                      final String formattedDate =
+                          "${currentDate.year}-${currentDate.month}-${currentDate.day}";
+                      // Navigator.of(context).pushReplacement(
+                      //   MaterialPageRoute(
+                      //       builder: (context) => const HomePage()),
+                      // );
                       // Aquí puedes agregar la lógica para enviar la inspección
+                      var postUri =
+                          Uri.parse('https://ibingcode.com/public/subirfoto');
+                      // 'https://easypark.ingdairo.website/test.php');
+                      http.MultipartRequest request =
+                          http.MultipartRequest("POST", postUri);
+                      final Map<String, String> data = {
+                        "placa": widget.plateValue,
+                        "fecha_inspeccion": formattedDate,
+                        "fecha_ingreso": "",
+                        "estado": "1",
+                        "id_funcionario": user.id.toString(),
+                        "id_proyecto": "1",
+                        "latitud": latitude.toString(),
+                        "longitud": longitude.toString(),
+                        "marca": 'selectedCarBrand',
+                        "tipo_vehiculo": 'selectedVehicleType',
+                        "multimedia":
+                            "multimedia/inspecciones/${widget.plateValue}",
+                      };
+                      for (var i = 0; i < photos.length; i++) {
+                        if (photos[i] != null) {
+                          http.MultipartFile multipartFile =
+                              await http.MultipartFile.fromPath(
+                                  "image-$i", photos[i]!.path);
+                          request.files.add(multipartFile);
+                        }
+                      }
+                      request.fields.addAll(data);
+                      http.StreamedResponse response = await request.send();
+                      final respStr = await response.stream.bytesToString();
+                      if (response.statusCode == 200) {
+                        print(respStr);
+                        // var jsonData = jsonDecode(respStr);
+                        // success
+                      } else {
+                        // error
+                      }
+                      // _sendData()
                     },
                     child: const Text(
                       'Enviar Inspección',
