@@ -1,111 +1,100 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:ftpconnect/ftpconnect.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as img;
-import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
+// import 'dart:convert';
+// import 'dart:io';
+// import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:zlib/zlib.dart';
 
-void main() {
-  runApp(MyApp());
-}
+// void main() {
+//   runApp(MyApp());
+// }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Tomar y Subir Foto a FTP',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: PhotoUploaderScreen(),
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Capturar Imagen y Convertirla a Base64',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: PhotoConverterScreen(),
+//     );
+//   }
+// }
 
-class PhotoUploaderScreen extends StatefulWidget {
-  @override
-  _PhotoUploaderScreenState createState() => _PhotoUploaderScreenState();
-}
+// class PhotoConverterScreen extends StatefulWidget {
+//   @override
+//   _PhotoConverterScreenState createState() => _PhotoConverterScreenState();
+// }
 
-class _PhotoUploaderScreenState extends State<PhotoUploaderScreen> {
-  final FTPConnect _ftpConnect = FTPConnect(
-    "ftp.ibingcode.com",
-    user: "u793589645.citav_multimedia",
-    pass: "Recaudos123#",
-  );
+// class _PhotoConverterScreenState extends State<PhotoConverterScreen> {
+//   File? _imageFile;
+//   final ImagePicker _picker = ImagePicker();
 
-  File? _imageFile;
-  final ImagePicker _picker = ImagePicker();
+//   void _captureAndConvertImage() async {
+//     final XFile? imageFile = await _picker.pickImage(
+//       source: ImageSource.camera,
+//       imageQuality: 90,
+//       maxWidth: 1920,
+//       maxHeight: 1080,
+//       preferredCameraDevice: CameraDevice.rear,
+//     );
 
-  Future<void> _log(String log) async {
-    print(log);
-    await Future.delayed(Duration(seconds: 1));
-  }
+//     if (imageFile != null) {
+//       setState(() {
+//         _imageFile = File(imageFile.path);
+//       });
 
-  Future<void> _uploadPhotoToFTP(File imageFile) async {
-    try {
-      await _log('Connecting to FTP ...');
-      await _ftpConnect.connect();
-      await _log('Uploading ...');
-      await _ftpConnect.changeDirectory('upload');
+//       // Convierte la imagen a base64
+//       final List<int> imageBytes = await _imageFile!.readAsBytes();
+//       final String base64Image = base64Encode(imageBytes);
 
-      // Genera un nombre de archivo único (puedes personalizar esto)
-      String fileName = 'photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+//       // Comprime el código Base64 utilizando zlib
+//       final codec = ZLibCodec();
+//       final compressedBytes = codec.encode(utf8.encode(base64Image));
+//       final compressedBase64 = base64Encode(compressedBytes);
 
-      // Sube el archivo al servidor FTP
-      await _ftpConnect.uploadFile(imageFile, sRemoteName: fileName);
+//       // Descomprime el código Base64
+//       final decompressedBytes = codec.decode(base64Decode(compressedBase64));
+//       final decompressedBase64 = utf8.decode(decompressedBytes);
 
-      await _log('File uploaded successfully');
-    } catch (e) {
-      await _log('Error: ${e.toString()}');
-    } finally {
-      await _ftpConnect.disconnect();
-    }
-  }
+//       // Muestra el JSON con el código Base64 comprimido en pantalla
+//       showDialog(
+//         context: context,
+//         builder: (context) {
+//           return AlertDialog(
+//             title: Text('Imagen en Base64 Comprimido'),
+//             content: SingleChildScrollView(
+//               child: Text(decompressedBase64),
+//             ),
+//             actions: <Widget>[
+//               TextButton(
+//                 onPressed: () {
+//                   Navigator.of(context).pop();
+//                 },
+//                 child: Text('Cerrar'),
+//               ),
+//             ],
+//           );
+//         },
+//       );
+//     }
+//   }
 
-  Future<void> _takeAndUploadPhoto() async {
-    final XFile? imageFile = await _picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 90,
-      maxWidth: 1920,
-      maxHeight: 1080,
-      preferredCameraDevice: CameraDevice.rear,
-    );
-
-    if (imageFile != null) {
-      // Corrige la orientación de la imagen antes de mostrarla
-      final image = img.decodeImage(File(imageFile.path).readAsBytesSync())!;
-      final tempDir = await getTemporaryDirectory();
-      final tempFile = File('${tempDir.path}/temp_image.jpg');
-
-      // Guarda la imagen corregida en el archivo temporal
-      tempFile.writeAsBytesSync(Uint8List.fromList(img.encodeJpg(image)));
-
-      // Sube la imagen al servidor FTP
-      await _uploadPhotoToFTP(tempFile);
-
-      setState(() {
-        _imageFile = tempFile;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Tomar y Subir Foto a FTP'),
-      ),
-      body: Center(
-        child: _imageFile == null
-            ? Text('No has tomado una foto.')
-            : Image.file(_imageFile!),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _takeAndUploadPhoto,
-        child: const Icon(Icons.camera_alt),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Capturar Imagen y Convertirla a Base64'),
+//       ),
+//       body: Center(
+//         child: _imageFile == null
+//             ? Text('No has capturado una imagen.')
+//             : Image.file(_imageFile!),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: _captureAndConvertImage,
+//         child: const Icon(Icons.camera_alt),
+//       ),
+//     );
+//   }
+// }

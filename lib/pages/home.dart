@@ -48,11 +48,12 @@ class HomePage extends StatelessWidget {
     return GridView.count(
       crossAxisCount: 1, // Cambia el número de columnas aquí
       childAspectRatio: 2.5,
-      mainAxisSpacing: 50.0,
+      mainAxisSpacing: 45.0,  
+          
       children: [
         _roundedButton('assets/imageButton3.png', '/inspection', context, "Nueva \n Inspección"),
         _roundedButton('assets/imageButton3.png', '/my_inspections', context, "Inspecciones \n Realizadas"),
-        _roundedButton('assets/imageButton3.png', '/inspection', context, "Sincronizar"),
+        // _roundedButton('assets/imageButton3.png', '/inspection', context, "Sincronizar"),
       ],
     );
   }
@@ -69,7 +70,7 @@ Widget _buildHorizontalButtons(BuildContext context) {
           children: [
             _roundedButton('assets/imageButton3.png', '/inspection', context, "Nueva Inspección"),
             _roundedButton('assets/imageButton3.png', '/my_inspections', context, "Inspecciones Realizadas"),
-            _roundedButton('assets/imageButton3.png', '/inspection', context, "Sincronizar"),
+            // _roundedButton('assets/imageButton3.png', '/inspection', context, "Sincronizar"),
           ],
         ),
       ],

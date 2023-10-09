@@ -45,6 +45,7 @@ dependencies:
   camera: ^0.10.5+5
   image: ^3.0.1
   flutter_exif_rotation: ^0.5.1
+  flutter_camera: ^1.0.0
   
   
   

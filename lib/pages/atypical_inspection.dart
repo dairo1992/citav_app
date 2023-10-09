@@ -267,13 +267,13 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Inspeccion sin informacion del RUNT',
           style: TextStyle(
             color: Colors.white, // Establece el color del texto en blanco
           ),
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors
               .white, // Establece el color del icono de retroceso en blanco
         ),
@@ -336,7 +336,7 @@ class _AtypicalInspectionState extends State<AtypicalInspection> {
                 ),
                 // const SizedBox(height: 16),
                 Container(
-                  constraints: BoxConstraints(maxWidth: 800),
+                  constraints: const BoxConstraints(maxWidth: 800),
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [

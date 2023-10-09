@@ -2,16 +2,27 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../entities/user.dart';
+import '../widgets/app_theme.dart';
 import 'home.dart';
 import 'package:http/http.dart' as http;
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  LoginPage({super.key});
+  bool isLoading = false;
 
   Future<void> _login(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+
     const String apiUrl = 'https://ibingcode.com/public/login';
 
     final Map<String, dynamic> data = {
@@ -32,21 +43,18 @@ class LoginPage extends StatelessWidget {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
 
         if (jsonResponse['status'] == true) {
-
-          // ignore: use_build_context_synchronously
           final userState = Provider.of<User>(context, listen: false);
-        userState.updateUser(
-          username: jsonResponse['usuario'],
-          name: jsonResponse['nombre'],
-          id: jsonResponse['cedula'].toString(),
-          token: jsonResponse['token'],
-        );
-          // ignore: use_build_context_synchronously
+          userState.updateUser(
+            username: jsonResponse['usuario'],
+            name: jsonResponse['nombre'],
+            id: jsonResponse['cedula'].toString(),
+            token: jsonResponse['token'],
+          );
+
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const HomePage()),
           );
         } else {
-          // ignore: use_build_context_synchronously
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -74,8 +82,6 @@ class LoginPage extends StatelessWidget {
           );
         }
       } else {
-        // Mostrar diálogo de error de conexión con la API
-        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -94,7 +100,6 @@ class LoginPage extends StatelessWidget {
         );
       }
     } catch (e) {
-      // Error de conexión con la API
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -111,6 +116,10 @@ class LoginPage extends StatelessWidget {
           ],
         ),
       );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -145,13 +154,10 @@ class LoginPage extends StatelessWidget {
                   TextFormField(
                     controller: _userController,
                     decoration: const InputDecoration(
-                        labelText: 'Usuario',
-                        
-                        labelStyle: TextStyle(fontSize: 25),
-                        hintStyle: TextStyle(fontSize: 50),
-                        
+                      labelText: 'Usuario',
+                      labelStyle: TextStyle(fontSize: 25),
+                      hintStyle: TextStyle(fontSize: 50),
                     ),
-                        
                     style: const TextStyle(
                       fontSize: 40,
                     ),
@@ -170,16 +176,25 @@ class LoginPage extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 90, vertical: 0),
                     padding: const EdgeInsets.all(20),
-                    width: 15,
-                    child: ElevatedButton(
-                      onPressed: () => _login(context),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        textStyle: const TextStyle(
-                          fontSize: 35,
-                        ),
-                      ),
-                      child: const Text('Iniciar sesión'),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (!isLoading)
+                          ElevatedButton(
+                            onPressed: () => _login(context),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              textStyle: const TextStyle(
+                                fontSize: 35,
+                              ),
+                              backgroundColor: Color(0xFF111D26), // Cambia el color de fondo
+                              foregroundColor: Colors.white
+                            ),
+                            child: const Text('     Iniciar sesión     '),
+                          ),
+                        if (isLoading)
+                          const CircularProgressIndicator(), // Indicador de carga
+                      ],
                     ),
                   ),
                   const SizedBox(height: 20),

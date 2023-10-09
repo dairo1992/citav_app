@@ -171,13 +171,13 @@ class _NewInspectionState extends State<NewInspection> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Inspeccion con informacion proveniente del RUNT',
           style: TextStyle(
             color: Colors.white, // Establece el color del texto en blanco
           ),
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors
               .white, // Establece el color del icono de retroceso en blanco
         ),
